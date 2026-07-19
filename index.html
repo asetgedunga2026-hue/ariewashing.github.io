@@ -4,18 +4,18 @@
   <title>Arie Washing - Cek Status</title>
   <style>
     body { font-family: Arial; text-align: center; padding: 50px; background: #f0f8ff; }
-   .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+  .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
     input { padding: 10px; width: 80%; margin: 10px 0; border: 2px solid #007bff; border-radius: 5px; font-size: 16px; text-transform: uppercase; }
     button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
     button:hover { background: #0056b3; }
-   .status { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  .status { margin-top: 20px; font-size: 18px; font-weight: bold; }
   </style>
 </head>
 <body>
   <div class="box">
     <h2>🧺 Arie Washing</h2>
     <p>Status Laundry Anda</p>
-    <input type="text" id="kode" placeholder="Masukkan Kode: ARW001">
+    <input type="text" id="kode" placeholder="MASUKKAN KODE: ARW001">
     <button onclick="cekStatus()">Cek Status</button>
     <div id="hasil" class="status"></div>
   </div>
@@ -23,12 +23,12 @@
   <script>
     let data = {};
 
-    // Ambil data dari Google Sheet otomatis
+    // Ambil data dari Google Sheet
     fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSEtZOdlowyd-kd3OItMnvnzcAF-f2H_vRV7RzGVQ_RhE-b7k7EauPqXpauc29PesqweBaMSUpCMldD/pub?output=csv")
-   .then(response => response.text())
-   .then(csv => {
+  .then(response => response.text())
+  .then(csv => {
         const rows = csv.split("\n");
-        rows.shift(); // hapus baris judul KODE,STATUS
+        rows.shift(); 
         rows.forEach(row => {
           const [kode, status] = row.split(",");
           if(kode && status) data[kode.trim().toUpperCase()] = status.trim();
@@ -39,8 +39,8 @@
       const kode = document.getElementById("kode").value.trim().toUpperCase();
       const hasil = document.getElementById("hasil");
       
-      if(data[kode]) {
-        hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data[kode]}`;
+      if(data[kode]) { // <-- INI YG DIBENERIN
+        hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data[kode]}`; // <-- INI JUGA
         hasil.style.color = "green";
       } else {
         hasil.innerHTML = `KODE: ${kode} <br> STATUS: Kode tidak ditemukan`;
@@ -50,3 +50,4 @@
   </script>
 </body>
 </html>
+
