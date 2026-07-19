@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cek Status Laundry - Arie Washing</title>
+  <title>Arie Washing - Cek Status</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-   .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 320px; }
-    h2 { color: #007bff; }
-    input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; text-transform: uppercase; }
-    button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 95%; }
+    body { font-family: Arial; text-align: center; padding: 50px; background: #f0f8ff; }
+   .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+    input { padding: 10px; width: 80%; margin: 10px 0; border: 2px solid #007bff; border-radius: 5px; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
    .status { margin-top: 20px; font-size: 18px; font-weight: bold; }
   </style>
 </head>
@@ -17,25 +15,38 @@
   <div class="box">
     <h2>🧺 Arie Washing</h2>
     <p>Status Laundry Anda</p>
-    <input type="text" id="kode" placeholder="Masukkan Kode Laundry">
+    <input type="text" id="kode" placeholder="Masukkan Kode: ARW001">
     <button onclick="cekStatus()">Cek Status</button>
     <div id="hasil" class="status"></div>
   </div>
+
   <script>
-    const data = {
-      "ARW001": "DITERIMA",
-      "ARW002": "SEDANG DICUCI",
-      "ARW003": "SIAP DIAMBIL"
-    };
+    let data = {};
+
+    // Ambil data dari Google Sheet otomatis
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSEtZOdlowyd-kd3OItMnvnzcAF-f2H_vRV7RzGVQ_RhE-b7k7EauPqXpauc29PesqweBaMSUpCMldD/pub?output=csv")
+     .then(response => response.text())
+     .then(csv => {
+        const rows = csv.split("\n");
+        rows.shift(); // hapus baris judul KODE,STATUS
+        rows.forEach(row => {
+          const [kode, status] = row.split(",");
+          if(kode && status) data[kode.trim().toUpperCase()] = status.trim();
+        });
+      });
+
     function cekStatus() {
-  const kode = document.getElementById("kode").value.toUpperCase();
-  const hasil = document.getElementById("hasil");
-  if(data) {
-    hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data}`;
-  } else {
-    hasil.innerHTML = `KODE: ${kode} <br> <span style="color:red">DATA TIDAK DITEMUKAN</span>`;
-  }
-}
+      const kode = document.getElementById("kode").value.trim().toUpperCase();
+      const hasil = document.getElementById("hasil");
+      
+      if(data[kode]) {
+        hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data[kode]}`;
+        hasil.style.color = "green";
+      } else {
+        hasil.innerHTML = `KODE: ${kode} <br> STATUS: Kode tidak ditemukan`;
+        hasil.style.color = "red";
+      }
+    }
   </script>
 </body>
 </html>
