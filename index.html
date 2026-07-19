@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cek Status Laundry - Arie Washing</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+   .box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 320px; }
+    h2 { color: #007bff; }
+    input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; text-transform: uppercase; }
+    button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 95%; }
+   .status { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🧺 Arie Washing</h2>
+    <p>Status Laundry Anda</p>
+    <input type="text" id="kode" placeholder="Masukkan Kode Laundry">
+    <button onclick="cekStatus()">Cek Status</button>
+    <div id="hasil" class="status"></div>
+  </div>
+  <script>
+    const data = {
+      "ARW001": "DITERIMA",
+      "ARW002": "SEDANG DICUCI",
+      "ARW003": "SIAP DIAMBIL"
+    };
+    function cekStatus() {
+  const kode = document.getElementById("kode").value.toUpperCase();
+  const hasil = document.getElementById("hasil");
+  if(data) {
+    hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data}`;
+  } else {
+    hasil.innerHTML = `KODE: ${kode} <br> <span style="color:red">DATA TIDAK DITEMUKAN</span>`;
+  }
+}
+  </script>
+</body>
+</html>
