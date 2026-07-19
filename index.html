@@ -1,24 +1,57 @@
-<script>
-  let data = {};
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arie Washing - Cek Status</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; background: #007bff; }
+  .box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-width: 400px; margin: 50px auto; }
+    h2 { color: #007bff; }
+    input { padding: 12px; width: 85%; margin: 10px 0; border: 2px solid #007bff; border-radius: 8px; font-size: 16px; text-transform: uppercase; }
+    button { padding: 12px 25px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
+    button:hover { background: #0056b3; }
+  .status { margin-top: 20px; font-size: 18px; font-weight: bold; min-height: 50px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>🧺 Arie Washing</h2>
+    <p>Cek Status Laundry Anda</p>
+    <input type="text" id="kode" placeholder="MASUKKAN KODE: ARW001">
+    <button onclick="cekStatus()">Cek Status</button>
+    <div id="hasil" class="status"></div>
+  </div>
 
-  fetch("TEMPEL_LINK_CSV_OM_DISINI")
-.then(res => res.text())
-.then(csv => {
-    const rows = csv.split("\n");
-    const headers = rows.shift().split(",");
-    const kodeIndex = headers.indexOf("order");
-    const statusIndex = headers.indexOf("Status");
-    
-    rows.forEach(row => {
-      const cols = row.split(",");
-      data[cols[kodeIndex].trim().toUpperCase()] = cols[statusIndex].trim();
-    });
-  });
+  <script>
+    let data = {};
 
-  function cekStatus() {
-    const kode = document.getElementById("kode").value.trim().toUpperCase();
-    const hasil = document.getElementById("hasil");
-    hasil.innerHTML = data? `KODE: ${kode} <br> STATUS: ${data}` : `KODE: ${kode} <br> STATUS: Kode tidak ditemukan`;
-    hasil.style.color = data? "green" : "red";
-  }
-</script>
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSEtZOdIowyd-kd3OItMnvnzcAF-f2H_vRV7RzGVQ_RhE-b7k7EauPqXpauc29PesqweBaMSUpCMIdD/pub?output=csv&gid=2090104441")
+  .then(res => res.text())
+  .then(csv => {
+        const rows = csv.split("\n");
+        const headers = rows.shift().split(",");
+        const kodeIndex = headers.indexOf("order");
+        const statusIndex = headers.indexOf("Status");
+        
+        rows.forEach(row => {
+          const cols = row.split(",");
+          if(cols[kodeIndex]) data[cols[kodeIndex].trim().toUpperCase()] = cols[statusIndex].trim();
+        });
+        console.log("Data ke-load:", data); // buat ngecek di F12
+      });
+
+    function cekStatus() {
+      const kode = document.getElementById("kode").value.trim().toUpperCase();
+      const hasil = document.getElementById("hasil");
+      
+      if(data) {
+        hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data}`;
+        hasil.style.color = "green";
+      } else {
+        hasil.innerHTML = `KODE: ${kode} <br> STATUS: Kode tidak ditemukan`;
+        hasil.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
