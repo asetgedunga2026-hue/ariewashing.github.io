@@ -1,34 +1,33 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cek Status Laundry - Arie Washing</title>
-<style>
-  body { font-family: Arial, sans-serif; background: #f0f8ff; text-align: center; padding: 30px; }
-  .box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-  h1 { color: #0077b6; }
-  input { padding: 10px; width: 80%; border: 2px solid #0077b6; border-radius: 8px; margin-bottom: 10px; }
-  button { padding: 10px 20px; background: #0077b6; color: white; border: none; border-radius: 8px; cursor: pointer; }
-  button:hover { background: #005f94; }
-  #hasil { margin-top: 20px; font-size: 18px; font-weight: bold; }
-</style>
+  <title>Cek Status ARIE WASHING</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; background: #f0f8ff; }
+    h1 { color: #007bff; }
+    input { padding: 10px; width: 80%; max-width: 300px; margin: 10px 0; border: 2px solid #007bff; border-radius: 5px; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    #hasil { margin-top: 20px; padding: 15px; background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  </style>
 </head>
 <body>
-  <div class="box">
-    <h1>🧺 Arie Washing</h1>
-    <p>Masukkan Kode Laundry Anda</p>
-    <input type="text" id="kode" placeholder="Contoh: AW001">
-    <br>
-    <button onclick="cekStatus()">Cek Status</button>
-    <div id="hasil"></div>
-  </div>
+
+  <h1>ARIE WASHING</h1>
+  <p>Masukkan Kode Pelanggan</p>
+  
+  <input type="text" id="kode" placeholder="Contoh: ARW001">
+  <br>
+  <button onclick="cekstatus()">Cek Status</button>
+  
+  <div id="hasil"></div>
 
 <script>
-const url = "https://script.google.com/macros/s/AKfycbxPASTE_URL_APPS_SCRIPT_ANDA/exec";
+const url = "https://script.google.com/macros/s/AKfycbxaol-WsmkBH4bN6KX9s3o-Vz6GvFhIDPBphWyEqFkpwG8hH-i6hkMg39x-sLybkEgBHw/exec";
 
-async function cekStatus() {
-  const kode = document.getElementById("kode").value.toUpperCase();
+async function cekstatus() {
+  const kode = document.getElementById("kode").value;
   const hasil = document.getElementById("hasil");
   
   if(kode === "") {
@@ -41,16 +40,12 @@ async function cekStatus() {
   try {
     const res = await fetch(url + "?kode=" + kode);
     const data = await res.json();
-    
-    if(data.STATUS) {
-      hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data.STATUS}`;
-    } else {
-      hasil.innerHTML = "Kode tidak ditemukan";
-    }
-  } catch(err) {
-    hasil.innerHTML = "Error koneksi ke server";
+    hasil.innerHTML = data.status;
+  } catch (error) {
+    hasil.innerHTML = "Error koneksi. Coba lagi nanti";
   }
 }
 </script>
+
 </body>
 </html>
