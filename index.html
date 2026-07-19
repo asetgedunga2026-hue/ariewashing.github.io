@@ -1,54 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Arie Washing - Cek Status</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: Arial; text-align: center; padding: 20px; background: #007bff; }
-.box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); max-width: 400px; margin: 50px auto; }
-    h2 { color: #007bff; }
-    input { padding: 12px; width: 85%; margin: 10px 0; border: 2px solid #007bff; border-radius: 8px; font-size: 16px; text-transform: uppercase; }
-    button { padding: 12px 25px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; }
-    button:hover { background: #0056b3; }
-.status { margin-top: 20px; font-size: 18px; font-weight: bold; min-height: 50px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cek Status Laundry - Arie Washing</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f0f8ff; text-align: center; padding: 30px; }
+  .box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+  h1 { color: #0077b6; }
+  input { padding: 10px; width: 80%; border: 2px solid #0077b6; border-radius: 8px; margin-bottom: 10px; }
+  button { padding: 10px 20px; background: #0077b6; color: white; border: none; border-radius: 8px; cursor: pointer; }
+  button:hover { background: #005f94; }
+  #hasil { margin-top: 20px; font-size: 18px; font-weight: bold; }
+</style>
 </head>
 <body>
   <div class="box">
-    <h2>🧺 Arie Washing</h2>
-    <p>Cek Status Laundry Anda</p>
-    <input type="text" id="kode" placeholder="MASUKKAN KODE: AW001">
+    <h1>🧺 Arie Washing</h1>
+    <p>Masukkan Kode Laundry Anda</p>
+    <input type="text" id="kode" placeholder="Contoh: AW001">
+    <br>
     <button onclick="cekStatus()">Cek Status</button>
-    <div id="hasil" class="status"></div>
+    <div id="hasil"></div>
   </div>
 
-  <script>
-    let data = {};
+<script>
+const url = "https://script.google.com/macros/s/AKfycbxPASTE_URL_APPS_SCRIPT_ANDA/exec";
 
-    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSEtZOdIowyd-kd3OItMnvnzcAF-f2H_vRV7RzGVQ_RhE-b7k7EauPqXpauc29PesqweBaMSUpCMIdD/pub?output=csv&gid=2090104441")
-.then(res => res.text())
-.then(csv => {
-        const rows = csv.split("\n");
-        rows.shift(); // buang baris ORDER, STATUS
-        
-        rows.forEach(row => {
-          const cols = row.split(",");
-          if(cols[0]) data[cols[0].trim().toUpperCase()] = cols[1].trim();
-        });
-      });
-
-    function cekStatus() {
-      const kode = document.getElementById("kode").value.trim().toUpperCase();
-      const hasil = document.getElementById("hasil");
-      
-      if(data) {
-        hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data}`;
-        hasil.style.color = "green";
-      } else {
-        hasil.innerHTML = `KODE: ${kode} <br> STATUS: Kode tidak ditemukan`;
-        hasil.style.color = "red";
-      }
+async function cekStatus() {
+  const kode = document.getElementById("kode").value.toUpperCase();
+  const hasil = document.getElementById("hasil");
+  
+  if(kode === "") {
+    hasil.innerHTML = "Masukkan kode dulu ya!";
+    return;
+  }
+  
+  hasil.innerHTML = "Mengecek...";
+  
+  try {
+    const res = await fetch(url + "?kode=" + kode);
+    const data = await res.json();
+    
+    if(data.STATUS) {
+      hasil.innerHTML = `KODE: ${kode} <br> STATUS: ${data.STATUS}`;
+    } else {
+      hasil.innerHTML = "Kode tidak ditemukan";
     }
-  </script>
+  } catch(err) {
+    hasil.innerHTML = "Error koneksi ke server";
+  }
+}
+</script>
 </body>
 </html>
